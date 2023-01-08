@@ -1,0 +1,28 @@
+Package: scRoGG
+Type: Package
+Title: Performing robust coexpression based on proportionality for scRNA-seq data
+Version: 0.1.0
+Author: Huiwen Zheng
+Maintainer: The package maintainer <huiwen.zheng@uq.edu.au>
+Description: Extending proportionality measurements with essential genes 
+ as reference to identify robust correlate gene pairs for 
+ single-cell RNA-sequencing data
+License: CC0
+Encoding: UTF-8
+LazyData: true
+Imports:
+    SingleCellExperiment,
+    dismay,
+    scuttle,
+    reshape2,
+    cvequality,
+    ggpubr,
+    ggExtra,
+    igraph,
+    ggplot2
+Depends: 
+    R (>= 2.10),
+    propr,
+    msigdbr,
+    fgsea
+RoxygenNote: 7.2.1
