@@ -29,7 +29,7 @@ coExp_network <- function(edge_dat,min_size=1,n_networks=4){
     selegoG <- igraph::induced_subgraph(G_test,selnodes)
     igraph::edge_density(selegoG, loops=F)
     selegoG1 <- selegoG
-    E(selegoG1)$weight <- abs(E(selegoG)$weight)
+    igraph::E(selegoG1)$weight <- abs(igraph::E(selegoG)$weight)
     l <- igraph::layout.fruchterman.reingold(selegoG1)
     plot(selegoG, layout=l,    # === vertex
          vertex.color =rgb(0.6,0.6,0.6,0.6),          # Node color
