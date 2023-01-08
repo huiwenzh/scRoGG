@@ -11,7 +11,7 @@ robustness <- function(prop_list,stats=T, p.adj= 0.1){
 bi_zero <- prop_list[['bi_zero']]
 local_cor <- prop_list[['prop_distribution']]
 test_mean <- rowMeans(as.matrix(local_cor[,-1:-3]),na.rm = T)
-test_sd <- rowSds(as.matrix(local_cor[,-1:-3]),na.rm = T)
+test_sd <- matrixStats::rowSds(as.matrix(local_cor[,-1:-3]),na.rm = T)
 test_cv <- test_sd/test_mean
 cor_summary <- cbind(local_cor[,1:2],local_cor[,3]/test_cv*bi_zero)
 if (stats==F){
