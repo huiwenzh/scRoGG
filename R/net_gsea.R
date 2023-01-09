@@ -11,7 +11,7 @@
 
 net_gsea <- function(network,species = "Homo sapiens", category , subcategory = NULL, minSize=5,maxSize=500,BPPARAM=NULL){
   msigdbr_df <- msigdbr::msigdbr(species = species, category = category,subcategory = subcategory )
-  pathways <- split(x = msigdbr_df$entrez_gene, f = msigdbr_df$gs_name)
+  pathways <- split(x = msigdbr_df$gene_symbol, f = msigdbr_df$gs_name)
   # calculate average weight
   satistic <- cbind(as_edgelist(network),igraph::E(network)$weight)
   RCC_ave <- c()
