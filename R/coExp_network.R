@@ -9,12 +9,13 @@ coExp_network <- function(edge_dat,min_size=1,n_networks=4){
   #min_max <- function(z){(z-min(z))/(max(z)-min(z))}
   colnames(edge_dat) <- c('from','to','weight')
   #edge_dat$weight <- sign(edge_dat$weight)*min_max(abs(edge_dat$weight))
+  edge_dat$weight <- sign(edge_dat$weight)*sqrt(abs(edge_dat$weight))
   G <- igraph::graph_from_data_frame(edge_dat,directed = F)
   G_test <- igraph::induced_subgraph(
     G,   igraph::V(G)[ave(1:igraph::vcount(G), igraph::membership(igraph::components(G)), FUN = length) > min_size])
 
   m_all <- c()
-  res <- c(seq(0.0005,0.1, by=0.005))
+  res <- c(seq(0.0005,0.5, by=0.005))
   for (i in res){
     c1 = igraph::cluster_leiden(G_test,objective_function ="CPM",resolution_parameter =res[which.max(m_all)] ,n_iterations =100)
     m_all = c(m_all,igraph::modularity(G_test, c1$membership))
