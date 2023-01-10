@@ -1,4 +1,4 @@
-#' Generate proportional correlation distribution
+#'Generate proportional distribution based on essential genes for identifying robust gene-gene correlation in scRNA-seq data
 #' @author Huiwen Zheng
 #' @param dat A cell*gene matrix that can be raw or normliased without logarithm.
 #' @param normalised By default, performs normalisation via scattle package.     If changes to FALSE, the input data will be used in the following steps.
@@ -9,7 +9,7 @@
 #' @param details By default, transformed data will be returned and can be used to visualise  correlation.
 #' @return A list with three components:      1. bi_zero: joint zero for each gene pair.     2. prop_distribution: correlation distribution for each gene pair.    3.  transformed_data: transformed data using the mean of essential genes.
 #' @export
-prop_distribution <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 'hsa', bino = 0.05,details = T){
+scRoGG <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 'hsa', bino = 0.05,details = T){
   if (normalised==T) {
     sce <- SingleCellExperiment::SingleCellExperiment(list(counts=dat))
     sce <- scuttle::logNormCounts(sce[,colSums(SingleCellExperiment::counts(sce)) > 0], log=F)

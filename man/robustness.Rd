@@ -2,7 +2,7 @@
 % Please edit documentation in R/robustness.R
 \name{robustness}
 \alias{robustness}
-\title{Compute statstical correlation robustness test}
+\title{Compute statistical correlation robustness test}
 \usage{
 robustness(prop_list, stats = T, p.adj = 0.1)
 }
@@ -17,7 +17,7 @@ robustness(prop_list, stats = T, p.adj = 0.1)
 A dataframe with gene pair information, robustness score *(RS)* and p.adj value.
 }
 \description{
-Compute statstical correlation robustness test
+Compute statistical correlation robustness test
 }
 \author{
 Huiwen Zheng
