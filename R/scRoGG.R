@@ -30,7 +30,7 @@ scRoGG <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 
 
   dat_p <- dat_keep[rownames(dat_keep)%in%union(cor_df_sig$Var1,cor_df_sig$Var2),]
 
-  message(paste0(nrow(dat_p),' gene pairs pass the bivariate distribution probability test'))
+  message(paste0(nrow(cor_df_sig),' gene pairs pass the bivariate distribution probability test'))
 
   # calculate proportionality against per essential genes
   ct <- t(dat_p)
