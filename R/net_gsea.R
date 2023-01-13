@@ -21,6 +21,7 @@ net_gsea <- function(network,species = "Homo sapiens", category , subcategory = 
     RCC_ave <- c(RCC_ave,val)
 }
 RCC_ave.1 <- (RCC_ave-mean(RCC_ave))/sd(RCC_ave)
+E(network)$weight <- abs(E(network)$weight)
 statistic <- (RCC_ave.1+ igraph::evcent(network)$vector)/2
 
 result.GSEA <- fgsea::fgsea(pathways, statistic,  minSize = minSize,scoreType="pos",                      maxSize = maxSize, BPPARAM = BPPARAM)
