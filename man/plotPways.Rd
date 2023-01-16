@@ -4,12 +4,14 @@
 \alias{plotPways}
 \title{Visualise pathway enrichment results}
 \usage{
-plotPways(pways_df, n = 10)
+plotPways(pways_df, n = 10, p.adj = 0.1)
 }
 \arguments{
 \item{pways_df}{Output from pathway analysis.}
 
 \item{n}{Number of pathways plotted in the barplot.}
+
+\item{p.adj}{Adjusted p value to select significantly enriched genes}
 }
 \description{
 Visualise pathway enrichment results
