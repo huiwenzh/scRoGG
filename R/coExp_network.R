@@ -48,7 +48,7 @@ coExp_network <- function(edge_dat,min_size=1,n_networks=4){
 
          # === Edge
          edge.color="#cc6600",                           # Edge color
-         edge.width=E(selegoG)$weight*10,                                 # Edge width, defaults to 1
+         edge.width=igraph::E(selegoG)$weight,                                 # Edge width, defaults to 1
          edge.arrow.size=1,                            # Arrow size, defaults to 1
          edge.lty=1,
          edge.curved=0  ,                          # Edge curvature, range 0-1 (FALSE sets it to 0, TRUE to 0.5)
