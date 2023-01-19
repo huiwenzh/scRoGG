@@ -13,18 +13,17 @@ net_gsea <- function(network,species = "Homo sapiens", category , subcategory = 
   msigdbr_df <- msigdbr::msigdbr(species = species, category = category,subcategory = subcategory )
   pathways <- split(x = msigdbr_df$gene_symbol, f = msigdbr_df$gs_name)
   # calculate average weight
-  satistic <- cbind(as_edgelist(network),igraph::E(network)$weight)
+  satistic <- cbind(igraph::as_edgelist(network),igraph::E(network)$weight)
   RCC_ave <- c()
   for (ver in union(satistic[,1],satistic[,2])){
     val  <-  mean(as.numeric(satistic[satistic[,1]==ver|satistic[,2]==ver,3]))
     names(val) <- ver
     RCC_ave <- c(RCC_ave,val)
 }
-RCC_ave.1 <- (RCC_ave-mean(RCC_ave))/sd(RCC_ave)
-E(network)$weight <- abs(E(network)$weight)
-statistic <- (RCC_ave.1+ igraph::evcent(network)$vector)/2
+#igraph::E(network)$weight <- abs(igraph::E(network)$weight)
+stat <- RCC_ave + igraph::hub_score(network)$vector
 
-result.GSEA <- fgsea::fgsea(pathways, statistic,  minSize = minSize,scoreType="pos",                      maxSize = maxSize, BPPARAM = BPPARAM)
+result.GSEA <- fgsea::fgsea(pathways, stat,  minSize = minSize,scoreType="pos", maxSize = maxSize, BPPARAM = BPPARAM)
 result.GSEA
 }
 
