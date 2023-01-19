@@ -8,7 +8,7 @@
 #' @export
 
 robustness <- function(prop_list,stats=T, p.adj= 0.1){
-bi_zero <- prop_list[['bi_zero']]
+bi_zero <- prop_list[['bi_nonzero']]
 local_cor <- prop_list[['prop_distribution']]
 test_mean <- rowMeans(as.matrix(local_cor[,-1:-3]),na.rm = T)
 test_sd <- matrixStats::rowSds(as.matrix(local_cor[,-1:-3]),na.rm = T)

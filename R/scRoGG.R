@@ -88,11 +88,11 @@ scRoGG <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 
   cors <- cbind(cor_df_sig[,1:2],pearson_sign,cor_phs)
   colnames(cors)[1:3] <- c('gene1','gene2','sign')
   x[["prop_distribution"]] <- cors
-  bi_zero <- apply(cor_df_sig[,1:2],1,function(b){
+  bi_nonzero <- apply(cor_df_sig[,1:2],1,function(b){
     datt <- sum((dat_p[rownames(dat_p)==b[1],])*(dat_p[rownames(dat_p)==b[2],])==0)
     datt_pct <- (ncol(dat_p)-datt)/ncol(dat_p)
   })
 
-  x[['bi_zero']] <- bi_zero
+  x[['bi_nonzero']] <- bi_nonzero
   x
 }
