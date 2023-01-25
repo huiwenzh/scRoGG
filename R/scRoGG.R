@@ -61,10 +61,9 @@ scRoGG <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 
     use <- propr::ivar2index(ct, ivar = with_ES)
     logX <- log(ct)
     logSet <- logX[, use, drop = FALSE]
-    #ref <- rowMeans(logSet)
     ref <- rowMeans(logSet)
     lr <- sweep(logX, 1, ref, "-")
-    x[['transformed_data']] <- lr
+    x[['transformed_data']] <- t(lr)
   }
   # remove ribosomal genes
   cor_df_sig <- cor_df_sig[!is.infinite(cor_df_sig$value),]
@@ -72,7 +71,6 @@ scRoGG <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 
     use <- propr::ivar2index(ct, ivar = a)
     logX <- log(ct)
     logSet <- logX[, use, drop = FALSE]
-    #ref <- rowMeans(logSet)
     ref <- rowMeans(logSet)
     lr <- sweep(logX, 1, ref, "-")
     phs_cor <- apply(cor_df_sig,1,function(s){
