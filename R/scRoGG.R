@@ -63,7 +63,7 @@ scRoGG <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 
     logSet <- logX[, use, drop = FALSE]
     ref <- rowMeans(logSet)
     lr <- sweep(logX, 1, ref, "-")
-    x[['transformed_data']] <- t(lr)
+    x[['transformed_data']] <- lr
   }
   # remove ribosomal genes
   cor_df_sig <- cor_df_sig[!is.infinite(cor_df_sig$value),]
