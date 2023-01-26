@@ -9,7 +9,7 @@ plotCoExp <- function(dat, gene1, gene2){
 df <- as.data.frame(cbind(dat[,gene1],dat[,gene2]))
 colnames(df) <- c('g1', 'g2')
 p <- ggpubr::ggscatter(df, x = "g1", y = "g2",
-                       size = 1.3, alpha = 0.6,xlab =gene1,ylab = gene2 )
+                       size = 2, alpha = 0.6,xlab =gene1,ylab = gene2 )
 ggExtra::ggMarginal(p, type = "density",xparams = list(fill = "darkgreen"),yparams = list(fill = "orange"))
 }
 
