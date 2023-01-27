@@ -34,7 +34,7 @@ coExp_network <- function(edge_dat,min_size=1,n_networks=4){
     igraph::E(selegoG)$color <- ifelse(igraph::E(selegoG)$weight > 0,'#00D100','#B30000')
     l <- igraph::layout.fruchterman.reingold(selegoG1)
     plot(selegoG, layout=l,    # === vertex
-         vertex.color = rgb(0.6,0.6,0.6,0.6),          # Node color
+         vertex.color = "#cc6600b3",          # Node color
          vertex.frame.color = "white",                 # Node border color
          vertex.size=13,                               # Size of the node (default is 15)
          # Character vector used to label the nodes
