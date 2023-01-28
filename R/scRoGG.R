@@ -19,7 +19,7 @@ scRoGG <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 
   # at least present in more than 10%
   dat_keep <- dat_keep[index>(filter*ncol(dat_keep)),]
   # remove specific gene names - mito
-  MT <- grep(pattern = "^MT-", x = rownames(dat_keep), value = TRUE)
+  MT <- grep(pattern = "^MT-|^mt-", x = rownames(dat_keep), value = TRUE)
   dat_keep <- dat_keep[setdiff(rownames(dat_keep),MT),]
   message(paste('Removing', length(MT) , 'mitochondrial genes'))
   dat.coprob = dismay::binomial(t(dat_keep))
