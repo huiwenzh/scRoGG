@@ -14,7 +14,7 @@ robustness2(group_list, ref = 1, p.adj = 0.05)
 \item{p.adj}{Significance level used in the asymptotic test.}
 }
 \value{
-A dataframe with gene pair information, robustness score *(RS)*
+A dataframe with gene pair names, type (either changed in sign or through statistical testing), absolute fold-change.
 }
 \description{
 Compute statistical correlation robustness test between two samples
