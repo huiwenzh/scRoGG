@@ -15,6 +15,6 @@ plotPways <- function(pways_df, n=10, p.adj = 0.1){
   ggplot2::ggplot(pways_sub,aes(reorder(pathway, size), y= size, fill=padj))+
     geom_col()+
     scale_x_discrete(labels = function(x)
-      stringr::str_wrap(x, width = 16))+
-    scale_fill_gradient2(low = "yellow",mid = 'yellow', high = "red")+coord_flip()+xlab('')+theme_classic()
+      stringr::str_wrap(x, width = 30))+
+    scale_fill_gradient2(low = "#BA0F30",mid = '#BA0F30', high = "#003060")+coord_flip()+xlab('')+theme_classic()
 }
