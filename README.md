@@ -17,8 +17,8 @@ Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely
 ## 2. Main functions
 The input gene count matrix can be either raw or normalised but not log data, which can be switched on by parameter **normalised**. As the assumption of the asymptotic test we implemented, we suggest having at least 30 scEssentials identified for each test. Consider increasing **ES_number** to obtain a sufficient number for the downstream analysis. 
 
-scRoGG has three main functions, which are:
-1. Identify robust coexpressed genes in a single condition. Here we use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3].  
+scRoGG has **four** main functions, which are:
+1. Identify robust coexpressed genes in a single condition. Here we use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3]. The example data can be found in the data folder.  
 
 ```
 library(scRoGG)
