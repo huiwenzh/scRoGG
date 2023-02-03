@@ -12,7 +12,7 @@ We welcome any suggestions on the package! Please submit a ticket to issues if y
 
 ## 1. Background
 
-Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely impact the measurement of coexpression. Traditional methods such as Pearson and Spearman correlation fail to capture the gene pair correlation and often return low correlation coefficient even with significantly correlated gene pairs. Inspired by [review paper](https://www.nature.com/articles/s41592-019-0372-4), proportional correlation showed best performance in measuring the assoiation in single-cell RNA-seq data. Further extensive discussion suggested the improvement of proportional correlation can be achieved by providing a set of reference [1]. From our previous work, scRoGG implements essential genes that hve been tested in single-cell atlas (scEssentials) that shown high expression, detection rates and tight coexpression level.
+Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely impact the measurement of coexpression. Traditional methods such as Pearson and Spearman correlation fail to capture the gene pair correlation and often return low correlation coefficient even with significantly correlated gene pairs. As suggested in the review paper, proportional correlation showed best performance in measuring the assoiation in single-cell RNA-seq data [1]. Further extensive discussion suggested the improvement of proportional correlation can be achieved by providing a set of reference [2]. From our previous work, scRoGG implements essential genes that hve been tested in single-cell atlas (scEssentials) that shown high expression, detection rates and tight coexpression level.
 
 
 
@@ -23,5 +23,6 @@ Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely
 
 
 ## Reference
-[1] Erb, I., Notredame, C. How should we measure proportionality on relative gene expression data?. Theory Biosci. 135, 21–36 (2016). https://doi.org/10.1007/s12064-015-0220-8.
+[1] Skinnider, M.A., Squair, J.W. & Foster, L.J. Evaluating measures of association for single-cell transcriptomics. Nat Methods 16, 381–386 (2019). https://doi.org/10.1038/s41592-019-0372-4.
+[2] Erb, I., Notredame, C. How should we measure proportionality on relative gene expression data?. Theory Biosci. 135, 21–36 (2016). https://doi.org/10.1007/s12064-015-0220-8.
 
