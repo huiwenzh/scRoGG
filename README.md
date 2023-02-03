@@ -24,7 +24,7 @@ scRoGG has **four** main functions, which are:
 library(scRoGG)
 library(Seurat)
 # extract raw count for naive CD4+ T cells
-naiveT <- subset(pbmc, subset=name =='naive CD T' )
+naiveT <- readRDS('~ Example_data/naiveT.rds')
 naiveT <- as.matrix(naiveT@assays$RNA@counts)
 # run scRoGG with default settings
 naiveT_cor <- scRoGG(naiveT) 
