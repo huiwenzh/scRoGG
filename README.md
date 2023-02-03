@@ -22,6 +22,6 @@ Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely
 
 
 
-### Reference
+## Reference
 [1] Erb, I., Notredame, C. How should we measure proportionality on relative gene expression data?. Theory Biosci. 135, 21–36 (2016). https://doi.org/10.1007/s12064-015-0220-8.
 
