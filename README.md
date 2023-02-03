@@ -18,7 +18,7 @@ Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely
 The input gene count matrix can be either raw or normalised but not log data, which can be switched on by parameter **normalised**. As the assumption of the asymptotic test we implemented, we suggest having at least 30 scEssentials identified for each test. Consider increasing **ES_number** to obtain a sufficient number for the downstream analysis. 
 
 scRoGG has **four** main functions, which are:
-1. Identify robust coexpressed genes in a single condition. Here we use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3]. The example data can be found in the data folder.  
+1. Identify robust coexpressed genes in a single condition. Here we use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3].
 
 ```
 library(scRoGG)
@@ -32,17 +32,37 @@ naiveT_sig_cor <- robustness(naiveT_cor) # 1884 signficantly robustly coexpresse
 # with extremely large dataset, one can turn stats = F so that top 0.1% quantile of abs(RS) gene pairs will be returned.
 naiveT_sig_cor1 <- robustness(naiveT_cor,stats = T)
 ```
- 
+2. Identify dofferentailly coexpressed gene pairs between multiple conditions. Here we use three endothelial cells from mouse brain arteriovenous region, including arterial endothelial (aEC), capillary endothelial (cEC) and venous endothelial (vEC). Each cell type contains 397, 405, and 298 cells [4].
+```
+library(scRoGG)
+aEC <- brain_3EC[,brain_3EC$annoated.cell.types=='aEC']
+#Smartseq2 data is less sparse than 10X genomics data, so filter has increased to 0.2 to reduce the computational burden. For mouse data, org sets to 'mmu'. 
+aEC_cor  <- scRoGG(dat=assay(aEC),filter = 0.2,ES_number = 200,org = 'mmu') 
 
+capEC <- brain_3EC[,brain_3EC$annoated.cell.types=='capilEC']
+capEC_cor <- scRoGG(dat=assay(capEC),filter = 0.2,ES_number = 200,org = 'mmu') 
 
+vEC <- brain_3EC[,brain_3EC$annoated.cell.types=='vEC']
+vEC_cor <- scRoGG(dat=assay(vEC),filter = 0.2,ES_number = 200,org = 'mmu')
 
+# To test DC genes, robustness2 is applied
+EC_list <- list(aEC_cor,capEC_cor,vEC_cor)
+ECs_cordiff <- robustness2(EC_list,p.adj = 0.1) #221 significantly DC genes identified
+```
+
+3. 
 
 
 
 
 ## Reference
 [1] Skinnider, M.A., Squair, J.W. & Foster, L.J. Evaluating measures of association for single-cell transcriptomics. Nat Methods 16, 381–386 (2019). https://doi.org/10.1038/s41592-019-0372-4.
+
 [2] Erb, I., Notredame, C. How should we measure proportionality on relative gene expression data?. Theory Biosci. 135, 21–36 (2016). https://doi.org/10.1007/s12064-015-0220-8.
+
 [3] Zheng, G., Terry, J., Belgrader, P. et al. Massively parallel digital transcriptional profiling of single cells. Nat Commun 8, 14049 (2017). https://doi.org/10.1038/ncomms14049.
+
+[4] Vanlandewijck, M., He, L., Mäe, M. A., Andrae, J., Ando, K., Del Gaudio, F., Nahar, K., Lebouvier, T., Laviña, B., Gouveia, L., Sun, Y., Raschperger, E., Räsänen, M., Zarb, Y., Mochizuki, N., Keller, A., Lendahl, U., & Betsholtz, C. (2018). A molecular atlas of cell types and zonation in the brain vasculature. Nature, 554(7693), 475–480. https://doi.org/10.1038/nature25739.
+
 
 
