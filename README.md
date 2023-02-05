@@ -18,7 +18,7 @@ Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely
 The input gene count matrix can be either raw or normalised but not log data, which can be switched on by parameter **normalised**. As the assumption of the asymptotic test we implemented, we suggest having at least 30 scEssentials identified for each test. Consider increasing **ES_number** to obtain a sufficient number for the downstream analysis. 
 
 scRoGG has **four** main functions, which are:
-1. Identify robust coexpressed genes in a single condition. Here we use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3].
+1. Identify robust coexpressed genes in a single condition. Here I use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3].
 
 ```
 library(scRoGG)
@@ -32,7 +32,7 @@ naiveT_sig_cor <- robustness(naiveT_cor) # 1884 signficantly robustly coexpresse
 # with extremely large dataset, one can turn stats = F so that top 0.1% quantile of abs(RS) gene pairs will be returned.
 naiveT_sig_cor1 <- robustness(naiveT_cor,stats = T)
 ```
-2. Identify dofferentailly coexpressed gene pairs between multiple conditions. Here we use three endothelial cells from mouse brain arteriovenous region, including arterial endothelial (aEC), capillary endothelial (cEC) and venous endothelial (vEC). Each cell type contains 397, 405, and 298 cells [4].
+2. Identify dofferentailly coexpressed gene pairs between multiple conditions. Here we use three endothelial cells from **mouse brain arteriovenous region**, including arterial endothelial (aEC), capillary endothelial (cEC) and venous endothelial (vEC). Each cell type contains 397, 405, and 298 cells [4].
 ```
 library(scRoGG)
 aEC <- brain_3EC[,brain_3EC$annoated.cell.types=='aEC']
@@ -49,8 +49,12 @@ vEC_cor <- scRoGG(dat=assay(vEC),filter = 0.2,ES_number = 200,org = 'mmu')
 EC_list <- list(aEC_cor,capEC_cor,vEC_cor)
 ECs_cordiff <- robustness2(EC_list,p.adj = 0.1) #221 significantly DC genes identified
 ```
+3. Constructing coexpression network with community detection by Ledien clustering, returing *igraph* object for visualisation transformation. This method can be used for any types of edgelist object (3 columns: gene1; gene2; association). Here, I use the result from naiveT cells as an example. For more details, please refere to our vignette.
 
-3. 
+```
+library(scRoGG)
+
+```
 
 
 
