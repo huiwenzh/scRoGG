@@ -31,6 +31,10 @@ naiveT_cor <- scRoGG(naiveT)
 naiveT_sig_cor <- robustness(naiveT_cor) # 1884 signficantly robustly coexpressed genes
 # with extremely large dataset, one can turn stats = F so that top 0.1% quantile of abs(RS) gene pairs will be returned.
 naiveT_sig_cor1 <- robustness(naiveT_cor,stats = T)
+
+# To visualise a specific gene pair
+
+plotCoExp(naiveT_cor$transformed_data,'CCL7','NKG7')
 ```
 2. Identify dofferentailly coexpressed gene pairs between multiple conditions. Here we use three endothelial cells from **mouse brain arteriovenous region**, including arterial endothelial (aEC), capillary endothelial (cEC) and venous endothelial (vEC). Each cell type contains 397, 405, and 298 cells [4].
 ```
@@ -53,10 +57,19 @@ ECs_cordiff <- robustness2(EC_list,p.adj = 0.1) #221 significantly DC genes iden
 
 ```
 library(scRoGG)
-
+naiveT_net <- coExp_network(naiveT_sig_cor[,1:3],n_networks = 1) # To plot the largest sub-communities
+# naiveT_net is a list with 'all' for the full network and sub_1 as the largest sub-communities by size.
 ```
 
+4. Performing network-based GSEA (net-GSEA). In scRoGG, we implement a novel method to perform gene-set enrichment analysis for network object (igraph). To obtain gene set information, scRoGG implements the syntax from msigd. Please refer to our manuscript for how the analysis is performed.
 
+```
+naiveT_gsea <- net_gsea(network = naiveT_net[['all']],species = 'Homo sapiens', category = 'C5',subcategory = 'GO:BP',minSize = 20,sign = F) # against GO BP pathways
+naiveT_gsea1 <- net_gsea(network = naiveT_net[['all']],species = 'Homo sapiens', category = 'C2',subcategory = 'CP:KEGG',minSize = 10) # against KEGG pathways
+
+# you can visualise the significantly entiched pathways in barplot.
+
+```
 
 
 ## Reference
