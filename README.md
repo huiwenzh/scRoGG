@@ -68,7 +68,8 @@ naiveT_gsea <- net_gsea(network = naiveT_net[['all']],species = 'Homo sapiens', 
 naiveT_gsea1 <- net_gsea(network = naiveT_net[['all']],species = 'Homo sapiens', category = 'C2',subcategory = 'CP:KEGG',minSize = 10) # against KEGG pathways
 
 # you can visualise the significantly entiched pathways in barplot.
-
+library(ggplot2)
+plotPways(naiveT_gsea)+ggtitle('Naive CD4+ T enriched pathways')
 ```
 
 
