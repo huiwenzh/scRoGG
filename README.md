@@ -61,7 +61,7 @@ naiveT_net <- coExp_network(naiveT_sig_cor[,1:3],n_networks = 1) # To plot the l
 # naiveT_net is a list with 'all' for the full network and sub_1 as the largest sub-communities by size.
 ```
 
-4. Performing network-based GSEA (net-GSEA). In scRoGG, we implement a novel method to perform gene-set enrichment analysis for network object (igraph). To obtain gene set information, scRoGG implements the syntax from msigd. Please refer to our manuscript for how the analysis is performed.
+4. Performing network-based GSEA (net-GSEA). In scRoGG, we implement a novel method to perform gene-set enrichment analysis for network object (ANY igraph objects). To obtain gene set information, scRoGG implements the syntax from msigd. Please refer to our manuscript for how the analysis is performed.
 
 ```
 naiveT_gsea <- net_gsea(network = naiveT_net[['all']],species = 'Homo sapiens', category = 'C5',subcategory = 'GO:BP',minSize = 20,sign = F) # against GO BP pathways
