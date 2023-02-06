@@ -10,11 +10,11 @@ library(scRoGG)
 ```
 We welcome any suggestions on the package! Please submit a ticket to issues if you have encountered any techinical problems. For more details for the method, please refer to our manuscript. 
 
-## 1. Background
+## Background
 
 Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely impact the measurement of coexpression. Traditional methods such as Pearson and Spearman correlation fail to capture the gene pair correlation and often return low correlation coefficient even with significantly correlated gene pairs. As suggested in the review paper, proportional correlation showed best performance in measuring the assoiation in single-cell RNA-seq data [1]. Further extensive discussion suggested the improvement of proportional correlation can be achieved by providing a set of reference [2]. From our previous work, scRoGG implements essential genes that hve been tested in single-cell atlas (scEssentials) that shown high expression, detection rates and tight coexpression level.
 
-## 2. Main functions
+## Main functions
 The input gene count matrix can be either raw or normalised but not log data, which can be switched on by parameter **normalised**. As the assumption of the asymptotic test we implemented, we suggest having at least 30 scEssentials identified for each test. Consider increasing **ES_number** to obtain a sufficient number for the downstream analysis. 
 
 scRoGG has **four** main functions, which are:
