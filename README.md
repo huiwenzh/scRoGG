@@ -71,7 +71,8 @@ naiveT_gsea1 <- net_gsea(network = naiveT_net[['all']],species = 'Homo sapiens',
 library(ggplot2)
 plotPways(naiveT_gsea)+ggtitle('Naive CD4+ T enriched pathways')
 ```
-
+## Vignettes
+I have generated three vignettes in the /Vignette folder to further discuss about the technical aspects (i.e. the statistical tests implemented and the parameters may impact the result of scRoGG and how to perform scRoGG with raw count matrix in detail.
 
 ## Reference
 [1] Skinnider, M.A., Squair, J.W. & Foster, L.J. Evaluating measures of association for single-cell transcriptomics. Nat Methods 16, 381–386 (2019). https://doi.org/10.1038/s41592-019-0372-4.
