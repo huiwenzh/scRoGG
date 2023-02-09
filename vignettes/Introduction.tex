@@ -1,0 +1,129 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Introduction to scRoGG},
+  pdfauthor={Huiwen Zheng},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Introduction to scRoGG}
+\author{Huiwen Zheng}
+\date{2023-02-09}
+
+\begin{document}
+\maketitle
+
+\textbf{Current package version: v0.0.9}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Single-cell RNA-sequencing (scRNA-seq) is widely applied to profile gene
+expression under different biological systems and species. This allows
+researchers to investigate key marker genes and infer biological
+functions that drive the changes. One of the bioinformatics techniques
+is to construct coexpression networks with the gene pairs that
+co-regulate simultaneously. These networks can help to uncover
+functional relationships between genes and provide insight into
+biological processes and systems. Additionally, coexpression networks
+can be used to identify potential regulatory relationships between genes
+and suggest new hypotheses for further experimentation.
+
+The \href{https://github.com/huiwenzh/scRoGG}{scRoGG} package builds on
+proportion correlation that has shown optimal performance in measuring
+gene associations for scRNA-seq data (Skinnider et al.~2019).
+Improvements have been made by incorporating essential gene lists to
+consider the cellular heterogeneity. This vignette provides brief
+introduction on the statistical framework and parameter alteration.
+
+\hypertarget{transformation-in-proportion-correlation}{%
+\section{Transformation in proportion
+correlation}\label{transformation-in-proportion-correlation}}
+
+Based on the extensive investigation of proportionality as correlation
+for relative data (Lovell D et al, 2015; Erb et al, 2016), statistic ϕ
+that relates to log-ratio analysis was designed. It has shown that using
+an unchanged gene as a reference has huge advantages in terms of
+sensitivity, which called additive log-ratio transformation on the data
+matrix by \[ 
+alr(x) = (log(x_1/x_d),...,log(x_n/x_d); x_n = x_d -1
+\]
+
+where the reference gene \[ x_d \]
+
+is scarified in the transformation procedure.
+
+\hypertarget{reference}{%
+\section{Reference}\label{reference}}
+
+Skinnider, M.A., Squair, J.W. \& Foster, L.J. Evaluating measures of
+association for single-cell transcriptomics. Nat Methods 16, 381--386
+(2019). \url{https://doi.org/10.1038/s41592-019-0372-4}.
+
+Lovell D, Pawlowsky-Glahn V, Egozcue JJ, Marguerat S, Bahler J (2015)
+Proportionality: a valid alternative to correlation for relative data.
+PLoS Comp Biol 11:e1004075.
+\href{https://doi.org/10.1371/journal.pcbi.1004075}{doi:{[}10.1371/journal.pcbi.1004075{]}(doi:\%5B10.1371/journal.pcbi.1004075)\{.uri\}}
+
+Erb, I., Notredame, C. How should we measure proportionality on relative
+gene expression data?. \emph{Theory Biosci.} \textbf{135}, 21--36
+(2016). \url{https://doi.org/10.1007/s12064-015-0220-8}
+
+\end{document}

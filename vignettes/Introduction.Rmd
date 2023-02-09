@@ -1,0 +1,44 @@
+---
+title: "Introduction to scRoGG"
+date: '2023-02-09'
+author: 'Huiwen Zheng'
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+  pdf_document: default  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Current package version: v0.0.9**
+
+# Introduction
+
+Single-cell RNA-sequencing (scRNA-seq) is widely applied to profile gene expression under different biological systems and species. This allows researchers to investigate key marker genes and infer biological functions that drive the changes. One of the bioinformatics techniques is to construct coexpression networks with the gene pairs that co-regulate simultaneously. These networks can help to uncover functional relationships between genes and provide insight into biological processes and systems. Additionally, coexpression networks can be used to identify potential regulatory relationships between genes and suggest new hypotheses for further experimentation.
+
+The [scRoGG](https://github.com/huiwenzh/scRoGG) package builds on proportion correlation that has shown optimal performance in measuring gene associations for scRNA-seq data (Skinnider et al. 2019). Improvements have been made by incorporating essential gene lists to consider the cellular heterogeneity. This vignette provides brief introduction on the statistical framework and parameter alteration.
+
+# Transformation in proportion correlation
+
+Based on the extensive investigation of proportionality as correlation for relative data (Lovell D et al, 2015; Erb et al, 2016), statistic ϕ that relates to log-ratio analysis was designed. It has shown that using an unchanged gene as a reference has huge advantages in terms of sensitivity, which called additive log-ratio transformation on the data matrix by $$ 
+alr(x) = (log(x_1/x_d),...,log(x_n/x_d); x_n = x_d -1
+$$
+
+where the reference gene $$ x_d $$
+
+is scarified in the transformation procedure. Unlike the common gene markers that web-lab people used in qPCR, it is extremely difficult to determine a single gene with stable gene expression throughout cell types in scRNA-seq data. Moreover, the cellular heterogeneity will be overlooked with a single-gene reference. Therefore, a gene set that is constantly expressed and posses the heterogeneity may benefit for this task. Here in scRoGG, I implemented essential gene lists for scRNA-seq data.
+
+# Essential genes in scRNA-seq data
+
+Recent advent of scRNA-seq technology enables large-scale and systematic profiling on a organism to gain insights into biological systems. Additionally, various sequencing technology applications often result in unique data structures even on same biological conditions.
+
+# Reference
+
+Skinnider, M.A., Squair, J.W. & Foster, L.J. Evaluating measures of association for single-cell transcriptomics. Nat Methods 16, 381--386 (2019). <https://doi.org/10.1038/s41592-019-0372-4>.
+
+Lovell D, Pawlowsky-Glahn V, Egozcue JJ, Marguerat S, Bahler J (2015) Proportionality: a valid alternative to correlation for relative data. PLoS Comp Biol 11:e1004075. [doi:[10.1371/journal.pcbi.1004075](doi:%5B10.1371/journal.pcbi.1004075){.uri}](https://doi.org/10.1371/journal.pcbi.1004075)
+
+Erb, I., Notredame, C. How should we measure proportionality on relative gene expression data?. *Theory Biosci.* **135**, 21--36 (2016). <https://doi.org/10.1007/s12064-015-0220-8>
