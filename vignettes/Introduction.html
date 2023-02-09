@@ -83,7 +83,8 @@ builds on proportion correlation that has shown optimal performance in
 measuring gene associations for scRNA-seq data (Skinnider et al. 2019).
 Improvements have been made by incorporating essential gene lists to
 consider the cellular heterogeneity. This vignette provides brief
-introduction on the statistical framework and parameter alteration.</p>
+introduction on the statistical framework and key methods embedded in
+scRoGG.</p>
 </div>
 <div id="transformation-in-proportion-correlation" class="section level1">
 <h1>Transformation in proportion correlation</h1>
@@ -103,14 +104,43 @@ determine a single gene with stable gene expression throughout cell
 types in scRNA-seq data. Moreover, the cellular heterogeneity will be
 overlooked with a single-gene reference. Therefore, a gene set that is
 constantly expressed and posses the heterogeneity may benefit for this
-task.</p>
+task. Here in scRoGG, the ssential gene lists for scRNA-seq data were
+implemented.</p>
 </div>
 <div id="essential-genes-in-scrna-seq-data" class="section level1">
 <h1>Essential genes in scRNA-seq data</h1>
-<p>Recent advent of scRNA-seq technology enables large-scale and
-systematic profiling on a organism to gain insights into biological
+<p>The recent advent of scRNA-seq technology enables large-scale and
+systematic profiling of an organism to gain insights into biological
 systems. Additionally, various sequencing technology applications often
-result in unique data structures even on same biological conditions.</p>
+result in unique data structures even on the same biological conditions.
+Our previous study suggests the sets of essential genes are highly
+expressed, stably expressed, have high detection rates across sequencing
+platforms and are highly enriched in pathways such as cell maintenance.
+We also showcased such stability is inherited from the genetic level to
+transcriptomic and epigenetic levels. These characteristics ensure the
+broad applications of scRoGG in different experiments and fit
+statistical formulas. Therefore, by performing alr against each
+essential gene, scRoGG is capable of generating coexpression
+distribution for every gene pair.</p>
+</div>
+<div id="an-asymptotic-test-for-the-equality-of-coefficients-of-variation" class="section level1">
+<h1>An asymptotic test for the equality of coefficients of
+variation</h1>
+<p>Another key aspect that scRoGG implemented is the asymptotic test for
+the equality of coefficients of variation (CV) (Feltz et al, 1996) that
+is used to identify robust gene pairs and deferentially coexpressed gene
+pairs between groups. As the paper indicated, two main factors that may
+increase the type I error rates are the sample size and the large CV
+value. As the proportional correlation scRoGG measured yields between -1
+to 1 and there will not be an extremely small mean of the correlation
+coefficient, scRoGG mostly not affect by the problem of extremely large
+CV in the data. Additionally, in our paper, we tested the impact of a
+number of essential genes identified in the analysis, i.e. the sample
+size for the correlation distribution. We suggested at least
+<strong><em>30</em></strong> essential genes should be used in the
+analysis and increasing the number of essential genes may contribute to
+uncovering more coexpressed gene pairs. However, key gene pairs will be
+retained no matter how the parameter changes.</p>
 </div>
 <div id="reference" class="section level1">
 <h1>Reference</h1>
@@ -123,6 +153,9 @@ PLoS Comp Biol 11:e1004075. <a href="https://doi.org/10.1371/journal.pcbi.100407
 <p>Erb, I., Notredame, C. How should we measure proportionality on
 relative gene expression data?. <em>Theory Biosci.</em>
 <strong>135</strong>, 21–36 (2016). <a href="https://doi.org/10.1007/s12064-015-0220-8" class="uri">https://doi.org/10.1007/s12064-015-0220-8</a></p>
+<p>Feltz, C.J. and G.E. Miller, <em>AN ASYMPTOTIC TEST FOR THE EQUALITY
+OF COEFFICIENTS OF VARIATION FROM k POPULATIONS.</em> Statistics in
+Medicine, 1996. <strong>15</strong>(6): p. 647-658.</p>
 </div>
 </section>
 

@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Single-cell RNA-sequencing (scRNA-seq) is widely applied to profile gene expression under different biological systems and species. This allows researchers to investigate key marker genes and infer biological functions that drive the changes. One of the bioinformatics techniques is to construct coexpression networks with the gene pairs that co-regulate simultaneously. These networks can help to uncover functional relationships between genes and provide insight into biological processes and systems. Additionally, coexpression networks can be used to identify potential regulatory relationships between genes and suggest new hypotheses for further experimentation.
 
-The [scRoGG](https://github.com/huiwenzh/scRoGG) package builds on proportion correlation that has shown optimal performance in measuring gene associations for scRNA-seq data (Skinnider et al. 2019). Improvements have been made by incorporating essential gene lists to consider the cellular heterogeneity. This vignette provides brief introduction on the statistical framework and parameter alteration.
+The [scRoGG](https://github.com/huiwenzh/scRoGG) package builds on proportion correlation that has shown optimal performance in measuring gene associations for scRNA-seq data (Skinnider et al. 2019). Improvements have been made by incorporating essential gene lists to consider the cellular heterogeneity. This vignette provides brief introduction on the statistical framework and key methods embedded in scRoGG.
 
 # Transformation in proportion correlation
 
@@ -29,11 +29,15 @@ $$
 
 where the reference gene $$ x_d $$
 
-is scarified in the transformation procedure. Unlike the common gene markers that web-lab people used in qPCR, it is extremely difficult to determine a single gene with stable gene expression throughout cell types in scRNA-seq data. Moreover, the cellular heterogeneity will be overlooked with a single-gene reference. Therefore, a gene set that is constantly expressed and posses the heterogeneity may benefit for this task. Here in scRoGG, I implemented essential gene lists for scRNA-seq data.
+is scarified in the transformation procedure. Unlike the common gene markers that web-lab people used in qPCR, it is extremely difficult to determine a single gene with stable gene expression throughout cell types in scRNA-seq data. Moreover, the cellular heterogeneity will be overlooked with a single-gene reference. Therefore, a gene set that is constantly expressed and posses the heterogeneity may benefit for this task. Here in scRoGG, the ssential gene lists for scRNA-seq data were implemented.
 
 # Essential genes in scRNA-seq data
 
-Recent advent of scRNA-seq technology enables large-scale and systematic profiling on a organism to gain insights into biological systems. Additionally, various sequencing technology applications often result in unique data structures even on same biological conditions.
+The recent advent of scRNA-seq technology enables large-scale and systematic profiling of an organism to gain insights into biological systems. Additionally, various sequencing technology applications often result in unique data structures even on the same biological conditions. Our previous study suggests the sets of essential genes are highly expressed, stably expressed, have high detection rates across sequencing platforms and are highly enriched in pathways such as cell maintenance. We also showcased such stability is inherited from the genetic level to transcriptomic and epigenetic levels. These characteristics ensure the broad applications of scRoGG in different experiments and fit statistical formulas. Therefore, by performing alr against each essential gene, scRoGG is capable of generating coexpression distribution for every gene pair.
+
+# An asymptotic test for the equality of coefficients of variation
+
+Another key aspect that scRoGG implemented is the asymptotic test for the equality of coefficients of variation (CV) (Feltz et al, 1996) that is used to identify robust gene pairs and deferentially coexpressed gene pairs between groups. As the paper indicated, two main factors that may increase the type I error rates are the sample size and the large CV value. As the proportional correlation scRoGG measured yields between -1 to 1 and there will not be an extremely small mean of the correlation coefficient, scRoGG mostly not affect by the problem of extremely large CV in the data. Additionally, in our paper, we tested the impact of a number of essential genes identified in the analysis, i.e. the sample size for the correlation distribution. We suggested at least ***30*** essential genes should be used in the analysis and increasing the number of essential genes may contribute to uncovering more coexpressed gene pairs. However, key gene pairs will be retained no matter how the parameter changes.
 
 # Reference
 
@@ -42,3 +46,5 @@ Skinnider, M.A., Squair, J.W. & Foster, L.J. Evaluating measures of association 
 Lovell D, Pawlowsky-Glahn V, Egozcue JJ, Marguerat S, Bahler J (2015) Proportionality: a valid alternative to correlation for relative data. PLoS Comp Biol 11:e1004075. [doi:[10.1371/journal.pcbi.1004075](doi:%5B10.1371/journal.pcbi.1004075){.uri}](https://doi.org/10.1371/journal.pcbi.1004075)
 
 Erb, I., Notredame, C. How should we measure proportionality on relative gene expression data?. *Theory Biosci.* **135**, 21--36 (2016). <https://doi.org/10.1007/s12064-015-0220-8>
+
+Feltz, C.J. and G.E. Miller, *AN ASYMPTOTIC TEST FOR THE EQUALITY OF COEFFICIENTS OF VARIATION FROM k POPULATIONS.* Statistics in Medicine, 1996. **15**(6): p. 647-658.
