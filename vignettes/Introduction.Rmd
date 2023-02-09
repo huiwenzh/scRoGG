@@ -13,7 +13,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Current package version: v0.0.9**
+**Current package version: v0.0.9** ![](images/Logo-02.png){width="81"}
 
 # Introduction
 

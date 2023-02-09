@@ -1,0 +1,34 @@
+---
+title: "Identifying robust gene pairs in a single condition"
+date: '2023-02-09'
+author: 'Huiwen Zheng'
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+  pdf_document: default  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Current package version: v0.0.9** ![](images/Logo.png){width="104"}
+
+Coexpression networks are important for revealing functional relationships and interactions between genes. With the application of single-cell RNA-seq, it is now possible to investigate the network in a single cell type.
+
+Here I demonstrate the application of **scRoGG** using the example data stored in the package (naive CD4+ T cells from a healthy human PBMC).
+
+`scRoGG`
+
+```{r}
+library(scRoGG)
+#naiveT <- readRDS(system.file("Example_data", "naiveT.rds", package = "scRoGG")) # 711 cells with 13714 genes
+#naiveT_cor <- scRoGG(naiveT, normalised = T) # true normalised =T if your input data is unnormalised.
+```
+
+It will return you a list of three component:
+
+1.  `bi_zero`: a vector for the sparsity in a given gene pair.
+2.  `prop_distribution`: a dataframe contains the correlation distribution for each gene pair.
+3.  `transformed_data`(optional): a transformed dataframe mainly for visualising the coexpression in a given gene pair. See more in `plotCoExp`.
