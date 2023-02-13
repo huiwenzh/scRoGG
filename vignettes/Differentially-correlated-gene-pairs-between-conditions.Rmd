@@ -1,0 +1,71 @@
+---
+title: "Differentially correlated gene pairs between conditions"
+date: '2023-02-09'
+author: 'Huiwen Zheng'
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+  pdf_document: default  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Current package version: v0.0.9** ![](images/Logo.png){width="72"}
+
+**scRoGG** can also be used to determine differentially correlated (DC) gene pairs by comparing the CV of the local correlation distribution between groups. Here I use the example data stored in the package ( mouse endothelial cells in the arteriovenous zonation).
+
+```{r packages,echo=FALSE}
+library(scRoGG)
+library(ggplot2)
+library(igraph)
+library(ggpubr)
+```
+
+### Getting data
+
+```{r data}
+brain_3EC <- readRDS(system.file("data", "brain_3EC.rds", package = "scRoGG"))
+meta <- readRDS(system.file("data", "brain_3EC_meta.rds", package = "scRoGG"))
+aEC <- brain_3EC[,meta$annoated.cell.types=='aEC']
+capEC  <- brain_3EC[,meta$annoated.cell.types=='capilEC']
+vEC <- brain_3EC[,meta$annoated.cell.types=='vEC']
+
+```
+
+### scRoGG
+
+Similar to single condition procedures, firstly, ***`scRoGG`*** is performed to each data matrix. A list named **EC_list** will be required to store the output.
+
+```{r scRoGG}
+aEC_cor <- scRoGG(dat=aEC,filter = 0.2,ES_number = 200,org = 'mmu')
+# org change to mmu for mouse data
+capEC_cor <- scRoGG(dat=capEC,filter = 0.2,ES_number = 200,org = 'mmu')
+vEC_cor <- scRoGG(dat=vEC,filter = 0.2,ES_number = 200,org = 'mmu')
+
+# create a list to store the output
+EC_list <- list(aEC_cor,capEC_cor,vEC_cor)
+```
+
+### robustness2
+
+To determine the DC gene pairs among conditions, ***`robustness2`*** is used and a reference level is required to indicate how fold-change measurement should be calculated. See more details in our manuscript.
+
+```{r robustness2}
+ECs_DC <- robustness2(EC_list,p.adj = 0.1)
+#sign change
+ECs_sign_DC <- ECs_DC[ECs_DC$type=='sign',]
+# DC change 
+ECs_DC <- ECs_DC[ECs_DC$type=='DC',]
+
+```
+
+A dataframe with five columns will be generated. Compared to robustness function, here it indicates how these DC gene pairs were determined, either from a sign (from Pearson correlation) difference or the asymptotic test.
+
+### Session info
+
+```{r}
+sessionInfo()
+```
