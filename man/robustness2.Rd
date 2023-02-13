@@ -2,7 +2,7 @@
 % Please edit documentation in R/robustness2.R
 \name{robustness2}
 \alias{robustness2}
-\title{Compute statistical correlation robustness test between two samples}
+\title{Compute statistical correlation robustness test between samples}
 \usage{
 robustness2(group_list, ref = 1, p.adj = 0.05)
 }
@@ -17,7 +17,7 @@ robustness2(group_list, ref = 1, p.adj = 0.05)
 A dataframe with gene pair names, type (either changed in sign or through statistical testing), absolute fold-change.
 }
 \description{
-Compute statistical correlation robustness test between two samples
+Compute statistical correlation robustness test between samples
 }
 \author{
 Huiwen Zheng

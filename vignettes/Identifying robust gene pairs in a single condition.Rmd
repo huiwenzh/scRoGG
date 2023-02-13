@@ -23,8 +23,8 @@ Here I demonstrate the application of **scRoGG** using the example data stored i
 
 ```{r}
 library(scRoGG)
-#naiveT <- readRDS(system.file("Example_data", "naiveT.rds", package = "scRoGG")) # 711 cells with 13714 genes
-#naiveT_cor <- scRoGG(naiveT, normalised = T) # true normalised =T if your input data is unnormalised.
+naiveT <- readRDS(system.file("Example_data", "naiveT.rds", package = "scRoGG")) # 711 cells with 13714 genes
+naiveT_cor <- scRoGG(naiveT, normalised = T) # true normalised =T if your input data is unnormalised.
 ```
 
 It will return you a list of three component:
@@ -32,3 +32,5 @@ It will return you a list of three component:
 1.  `bi_zero`: a vector for the sparsity in a given gene pair.
 2.  `prop_distribution`: a dataframe contains the correlation distribution for each gene pair.
 3.  `transformed_data`(optional): a transformed dataframe mainly for visualising the coexpression in a given gene pair. See more in `plotCoExp`.
+
+
