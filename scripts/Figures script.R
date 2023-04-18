@@ -1,11 +1,27 @@
-# figure plotting 
-# Fig 1 #####
-# find one example 
-dat_cv <- data.frame(value=c(as.numeric(na.omit(a)),null_dist), group = rep(c("sample1",'sample2'),c(length(na.omit(a)),length(null_dist))))
+# figure plotting
+# libary loading######
 library(ggthemr)
+library(ggpubr)
+library(UpSetR)
+library(ggVennDiagram)
+library("dplyr")
+library(scRoGG)
+library(igraph)
+library(ggplot2)
+library(Hmisc)
+library(UpSetR)
+library(scran)
+library(GO.db)
+library(org.Mm.eg.db)
+library(RColorBrewer)
+library(msigdbr)
+# Fig 1 #####
+# find one example
+dat_cv <- data.frame(value=c(as.numeric(na.omit(a)),null_dist), group = rep(c("sample1",'sample2'),c(length(na.omit(a)),length(null_dist))))
+
 dust_theme <- ggthemr(palette = "dust", set_theme = FALSE,spacing = 1, type = 'outer')
 
-ggplot(dat_cv, aes(x=group, y=value, fill=group)) + 
+ggplot(dat_cv, aes(x=group, y=value, fill=group)) +
   geom_violin(trim=FALSE)+
   geom_boxplot(width=0.1, fill="white")+
   labs(title="                          Correlation CV (𝑔𝑖, 𝑔𝑗)",x="", y = "Correlation")+ scale_fill_brewer(palette="Dark2") +
@@ -14,12 +30,12 @@ ggplot(dat_cv, aes(x=group, y=value, fill=group)) +
 ggthemr_reset()
 
 # Fig 2 ######
-# number of sig. correlated gene pairs and cell number 
+# number of sig. correlated gene pairs and cell number
 pmbc_df <- data.frame(value = c(nrow(naiveT_sig_cor),nrow(CD14_Mono_sig_cor),nrow(MemoryT_sig_cor), nrow(B_sig_cor), nrow(CD8T_sig_cor), nrow(FCGR3A_sig_cor),nrow(NK_sig_cor)),
-                      type = c('Naive CD4+ T','CD14+ Mono','Memory CD4+ T','B','CD8+ T','FCRG3A+ Mono','NK'),group = c('Adaptive','Innate','Adaptive','Adaptive','Adaptive','Innate','Innate'), 
+                      type = c('Naive CD4+ T','CD14+ Mono','Memory CD4+ T','B','CD8+ T','FCRG3A+ Mono','NK'),group = c('Adaptive','Innate','Adaptive','Adaptive','Adaptive','Innate','Innate'),
                       number= c(711,480,472,344,279,162,144))
 
-pmbc_df$type <- factor(pmbc_df$type,  
+pmbc_df$type <- factor(pmbc_df$type,
                   levels = pmbc_df$type[order(pmbc_df$value, decreasing = TRUE)])
 
 fig2a <- ggplot(pmbc_df, aes(x=type, y=value, fill=group))+
@@ -28,34 +44,33 @@ fig2a <- ggplot(pmbc_df, aes(x=type, y=value, fill=group))+
   geom_text(aes(label=value), vjust=-1, size=3.5, col= 'black') +
   theme_classic()+labs(x="", y = "Number of significantly correlated gene pairs")
 wilcox.test(c(1884, 10288,154,14608),c(69003,57566,16158))
- 
-library(ggpubr)
+
 ggboxplot(pmbc_df, x = "group", y = "value",
           fill = "group", palette = "Dark2", add = "jitter")+ stat_compare_means(label.y = 75000,)+
   labs(x="", y = "Number of significantly correlated gene pairs")+theme_bw()+ theme(legend.position = "none")
 
 cor_list <- list("Naive CD4+ T" = paste0(naiveT_sig_cor$gene1,'-',naiveT_sig_cor$gene2),"CD14+ Mono" = paste0(CD14_Mono_sig_cor$gene1,'-',CD14_Mono_sig_cor$gene2),"Memory CD4+ T" = paste0(MemoryT_sig_cor$gene1,'-',MemoryT_sig_cor$gene2),'B' = paste0(B_sig_cor$gene1,'-',B_sig_cor$gene2),'CD8+ T' = paste0(CD8T_sig_cor$gene1,'-',CD8T_sig_cor$gene2),'FCRG3A+ Mono'= paste0(FCGR3A_sig_cor$gene1,'-',FCGR3A_sig_cor$gene2),'NK'= paste0(NK_sig_cor$gene1,'-',NK_sig_cor$gene2))
 Reduce(intersection, cor_list)
-library(UpSetR)
+
 cor_share <- fromList(cor_list)
 UpSetR::upset(cor_share,nsets = 7)
-library(ggVennDiagram)
+
 ggVennDiagram(
   cor_list,label_alpha = 0, label = 'count')+ scale_fill_gradient(low="white",high = "red")
 library(dendextend)
-dend <- t(cor_share) %>% 
-  dist(method = 'binary') %>% # calculate a distance matrix, 
-  hclust(method = "centroid") %>% # on it compute hierarchical clustering using the "average" method, 
+dend <- t(cor_share) %>%
+  dist(method = 'binary') %>% # calculate a distance matrix,
+  hclust(method = "centroid") %>% # on it compute hierarchical clustering using the "average" method,
   as.dendrogram # and lastly, turn that object into a dendrogram.
 
 dend %>% plot(ylim=c(0,1))
 
-# top 10 cor from each cell type 
+# top 10 cor from each cell type
 # for supplementary figure
-library("dplyr") 
+
 topcor <- function(x, n=10){
-  data_new <- x %>%              
-    arrange(desc(abs(RS))) %>% 
+  data_new <- x %>%
+    arrange(desc(abs(RS))) %>%
     slice(1:n)
   as.data.frame(data_new)
 }
@@ -67,7 +82,6 @@ CD8T_10 <- topcor(CD8T_sig_cor)
 FCRG3A_Mono_10 <- topcor(FCGR3A_sig_cor)
 NK_10 <- topcor(NK_sig_cor)
 
-library(scRoGG)
 p1 <- plotCoExp(FCGR3A_Mono$transformed_data, as.character(FCRG3A_Mono_10$gene1[1]),as.character(FCRG3A_Mono_10$gene2[1]))
 p2 <- plotCoExp(FCGR3A_Mono$transformed_data, as.character(FCRG3A_Mono_10$gene1[2]),as.character(FCRG3A_Mono_10$gene2[2]))
 p3 <- plotCoExp(FCGR3A_Mono$transformed_data, as.character(FCRG3A_Mono_10$gene1[3]),as.character(FCRG3A_Mono_10$gene2[3]))
@@ -78,7 +92,7 @@ p7 <- plotCoExp(FCGR3A_Mono$transformed_data, as.character(FCRG3A_Mono_10$gene1[
 p8 <- plotCoExp(FCGR3A_Mono$transformed_data, as.character(FCRG3A_Mono_10$gene1[8]),as.character(FCRG3A_Mono_10$gene2[8]))
 p9 <- plotCoExp(FCGR3A_Mono$transformed_data, as.character(FCRG3A_Mono_10$gene1[9]),as.character(FCRG3A_Mono_10$gene2[9]))
 p10 <- plotCoExp(FCGR3A_Mono$transformed_data, as.character(FCRG3A_Mono_10$gene1[10]),as.character(FCRG3A_Mono_10$gene2[10]))
-P <- ggpubr::ggarrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,ncol = 5,nrow = 2,labels = 'auto') 
+P <- ggpubr::ggarrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,ncol = 5,nrow = 2,labels = 'auto')
 annotate_figure(P, top = text_grob("FCGR3A+ Mono", face = "bold", size = 14))
 
 # selected gene pair for plotting Fig2b
@@ -104,7 +118,7 @@ gd <- edge_density(MemoryT_net[['sub_1']])
 
 g.random <- erdos.renyi.game(n = gorder(MemoryT_net[['sub_1']]), p.or.m = gd, type = "gnp")
 plot(g.random)
-plot(MemoryT_net[['sub_1']])
+plot(MemoryT_net[['sub_1']], vertex.label.cex=1.2,edge.color="lightsteelblue2",vertex.color='white',vertex.label.color='#133366',vertex.size=15)
 # net-based GSEA
 MemoryT_gsea <- net_gsea(network = MemoryT_net[['all']],species = 'Homo sapiens', category = 'C5',subcategory = 'GO:BP',minSize = 20)
 plotPways(MemoryT_gsea,p.adj = 0.05)+ggtitle('Memory CD4+ T cells')
@@ -119,14 +133,14 @@ pway1 <- plotPways(beta_pathway)+ggtitle('scRoGG')
 beta_pathway1 <- beta_pathway[beta_pathway$padj<0.2,]
 beta_pathway1$leadingEdge <- sapply(beta_pathway1$leadingEdge , function(a)paste0(a,collapse='/'))
 #write.csv(beta_pathway1,'scRoGG_beta_pathways.csv')
-# keep as same as what scRoGG used 
+# keep as same as what scRoGG used
 index <-  apply(beta_healthy,1,function(y)sum(y>0))
 beta_healthy_sub <- beta_healthy[index>(0.7*ncol(beta_healthy)),]
 # remove specific gene names - mito
 MT <- grep(pattern = "^MT-|^mt-", x = rownames(beta_healthy_sub), value = TRUE)
 beta_healthy_sub <- beta_healthy_sub[setdiff(rownames(beta_healthy_sub),MT),]
 # pearson + raw
-library(Hmisc)
+
 flattenCorrMatrix <- function(cormat, pmat) {
   ut <- upper.tri(cormat)
   x = data.frame(
@@ -138,10 +152,10 @@ flattenCorrMatrix <- function(cormat, pmat) {
   x$p.adj <- p.adjust(x$p)
   x
 }
-pearson_beta <- rcorr(t(beta_healthy_sub)) 
+pearson_beta <- rcorr(t(beta_healthy_sub))
 pearson_beta <- flattenCorrMatrix(pearson_beta$r, pearson_beta$P)
 pearson_beta_final <- pearson_beta[pearson_beta$p.adj<0.05,]
-library('scRoGG')
+
 pearson_beta_network <- coExp_network(pearson_beta_final[,1:3],n_networks = 1)
 pearson_beta_pways <- net_gsea(pearson_beta_network[['all']],species='Homo sapiens',category='H')
 pway2 <- plotPways(pearson_beta_pways)+ggtitle('Pearson_Raw')
@@ -161,10 +175,10 @@ SCT_beta <- SCT_beta[index>(0.7*ncol(SCT_beta)),]
 MT <- grep(pattern = "^MT-|^mt-", x = rownames(SCT_beta), value = TRUE)
 SCT_beta <- SCT_beta[setdiff(rownames(SCT_beta),MT),]
 
-pearsonSCT_beta <- rcorr(t(SCT_beta)) 
+pearsonSCT_beta <- rcorr(t(SCT_beta))
 pearsonSCT_beta <- flattenCorrMatrix(pearsonSCT_beta$r, pearsonSCT_beta$P)
 pearsonSCT_beta_final <- pearsonSCT_beta[pearsonSCT_beta$p.adj<0.05,]
-  
+
 pearsonSCT_beta_network <- coExp_network(pearsonSCT_beta_final[,1:3],n_networks = 1)
 pearsonSCT_beta_pways <- net_gsea(pearsonSCT_beta_network[['all']],species='Homo sapiens',category='H')
 
@@ -187,11 +201,10 @@ scRoGG_500 <- apply(beta_cor[,1:2],1,function(s)paste0(s[1],'_',s[2]))
 pearson_500n <- apply(pearson_500[,1:2],1,function(s)paste0(s[1],'_',s[2]))
 pearsonSCT_500n <- apply(pearsonSCT_500[,1:2],1,function(s)paste0(s[1],'_',s[2]))
 
-library(UpSetR)
 pair_list <- list(scRoGG = scRoGG_500,
                      Pearson_Raw = pearson_500n,
                      Pearson_BC = pearsonSCT_500n)
-upset(fromList(pair_list), order.by = 'freq', text.scale	= 2,main.bar.color=c('gray23','gray23','gray23','gray23','brown','darkgreen')) 
+upset(fromList(pair_list), order.by = 'freq', text.scale	= 2,main.bar.color=c('gray23','gray23','gray23','gray23','brown','darkgreen'))
 # overlap between scRoGG and Pearson_BC
 shared <- intersect(scRoGG_500,pearsonSCT_500n)
 shared <- t(sapply(shared,function(d)stringr::str_split(d,'_')[[1]])
@@ -201,7 +214,6 @@ scRoGG_net <- beta_network[['all']] # actually use beta_network2
 PearsonRaw_net <- pearson_500_net[['all']]
 PearsonBC_net <- pearsonSCT_500_net[['all']]
 
-library(igraph)
 assortativity.degree(scRoGG_net, directed = F)
 assortativity.degree(PearsonRaw_net, directed = F)
 assortativity.degree(PearsonBC_net, directed = F)
@@ -215,7 +227,7 @@ diameter(PearsonRaw_net, weights = NA)
 diameter(PearsonBC_net, weights = NA)
 
 boxplot(degree(scRoGG_net,normalized = T),degree(PearsonRaw_net,normalized = T),degree(PearsonBC_net,normalized = T))
- 
+
 # compare different number of ES
 corpair_list <- list(ES_50 = corpair_50,
                      ES_150 = corpair_150,
@@ -240,25 +252,25 @@ write.csv(share_pathway,'scRoGG_ESshare_pathways.csv')
 names(filter_0.7_ES_1000)[3] <- 'bi_nonzero'
 names(betaT2D_cor)[3] <- 'bi_nonzero'
 beta_T2D_list <- list(filter_0.7_ES_1000,betaT2D_cor)
-beta_T2D <- scRoGG::robustness2(beta_T2D_list, p.adj=0.1) 
+beta_T2D <- scRoGG::robustness2(beta_T2D_list, p.adj=0.1)
 write.csv(beta_T2D,'scRoGG_differentially_correlated_T2D.csv')
- 
+
 beta_T2D_net <- scRoGG::coExp_network(beta_T2D[,c(1,2,4)],n_networks = 2)
-p3c  <-plotCoExp(dat = filter_0.7_ES_1000$transformed_data,'CNTN1','APLP1') 
+p3c  <-plotCoExp(dat = filter_0.7_ES_1000$transformed_data,'CNTN1','APLP1')
 p3c1 <- plotCoExp(dat = betaT2D_cor$transformed_data,'CNTN1','APLP1')
 ggpubr::ggarrange(p3c,p3c1,labels = c('Healthy','T2D'))
 
-p3d  <-plotCoExp(dat = filter_0.7_ES_1000$transformed_data,'TULP4','RAB21') 
+p3d  <-plotCoExp(dat = filter_0.7_ES_1000$transformed_data,'TULP4','RAB21')
 p3d1 <- plotCoExp(dat = betaT2D_cor$transformed_data,'TULP4','RAB21')
 ggpubr::ggarrange(p3d,p3d1,labels = c('He ','T2D'))
-# to construct network 
+# to construct network
 betandT2D_pathway <- net_gsea(network = beta_T2D_net[['all']],species = 'Homo sapiens', category = 'C5',subcategory = 'GO:BP',minSize = 10)
 plotPways(betandT2D_pathway)
 betandT2D_pathway.s<- betandT2D_pathway[betandT2D_pathway$padj<0.2,]
 betandT2D_pathway.s$leadingEdge <- sapply(betandT2D_pathway.s$leadingEdge , function(a)paste0(a,collapse='/'))
 #write.csv(betandT2D_pathway.s,'scRoGG_healthyT2D_pathways.csv')
 
-# run EdgeR 
+# run EdgeR
 # Create single cell experiment object
 index <-  apply(betaT2D,1,function(y)sum(y>0))
 beta_T2D_sub <- betaT2D[index>(0.7*ncol(betaT2D)),]
@@ -270,14 +282,11 @@ beta_all<- cbind(beta_healthy_sub[match(s_genes,rownames(beta_healthy_sub)),],be
 
 beta_meta <- beta_meta[match(colnames(beta_all),beta_meta$X),]
 rownames(beta_meta) <- beta_meta$X
+
+library(SingleCellExperiment)
 sce_beta <- SingleCellExperiment(assays = list(counts = beta_all),
                             colData = beta_meta)
 
-# # Identify groups for aggregation of counts
-# groups <- colData(sce_beta)[, c( "diabetes",'dataset')]
-# summed <- aggregateAcrossCells(sce_beta, 
-#                                ids=groups)
-# summed
 library(edgeR)
 y.all <- DGEList(counts(sce_beta), samples = colData(sce_beta),group = colData(sce_beta)$diabetes)
 y.all <- calcNormFactors(y.all)
@@ -303,7 +312,7 @@ Gene_list <- list(scRoGG = union(beta_T2D$gene1,beta_T2D$gene2),
                   edgeR = rownames(EdgeR_DE_genes),
                   DEseq2 = rownames(DESeq2_DE_genes))
 #write.csv(union(beta_T2D$gene1,beta_T2D$gene2),'scRoGG_DC_genes.csv')
-library(UpSetR)
+
 upset(fromList(Gene_list), order.by = 'freq', text.scale = 2)
 Reduce(intersect,Gene_list)
 
@@ -313,7 +322,7 @@ CNTN1_DEseq2 <-log2(counts(dds, normalized=TRUE)[rownames(y.all)=='CNTN1',]+1)
 APLP1_DEseq2 <-log2(counts(dds, normalized=TRUE)[rownames(y.all)=='APLP1',]+1)
 # supp. data to showcase the difference between DE and DC
 DE.df <- data.frame(value = c(CNTN1_edgeR,APLP1_edgeR,CNTN1_DEseq2,APLP1_DEseq2),group = beta_meta$diabetes, method = rep(c('edegR','DEseq2'), each = 801*2),gene = rep(c('CNTN1','APLP1','CNTN1','APLP1'), each = 801))
-library(ggplot2)
+
 ggplot(DE.df, aes(x = group, y = value, fill=group))+
   geom_violin(trim=FALSE)+
   geom_boxplot(width=0.1, fill="white")+
@@ -322,20 +331,20 @@ ggplot(DE.df, aes(x = group, y = value, fill=group))+
 # Fig 4 mouse endothelial arteriovenous zonation ####
 # visualise in a tSNE
 brain_3EC = readRDS('brain_3EC.rds')
-library(scran)
+
 brain_3EC <- computeSumFactors(brain_3EC)
 brain_3EC <- logNormCounts(brain_3EC)
-dec <- modelGeneVar(brain_3EC) 
+dec <- modelGeneVar(brain_3EC)
 sced <- denoisePCA(brain_3EC, dec, subset.row=getTopHVGs(dec, prop=0.1)) # 741 HVGs
-ncol(reducedDim(sced, "PCA")) #30 
+ncol(reducedDim(sced, "PCA")) #30
 brain_3EC <- fixedPCA(brain_3EC, subset.row=getTopHVGs(dec, prop=0.1))
 reducedDim(brain_3EC, "PCAsub") <- reducedDim(brain_3EC, "PCA")[,1:30]
 library(scater)
 brain_3EC <- runTSNE(brain_3EC, dimred="PCAsub")
-plotTSNE(brain_3EC, colour_by="annoated.cell.types", text_by="annoated.cell.types")+ scale_color_manual(values=c("#cd9797",  "#b09db9","#9fa4c6"))                                      
+plotTSNE(brain_3EC, colour_by="annoated.cell.types", text_by="annoated.cell.types")+ scale_color_manual(values=c("#cd9797",  "#b09db9","#9fa4c6"))
 
 #identify patterns
-library(scRoGG)
+
 aEC <- brain_3EC[,brain_3EC$annoated.cell.types=='aEC']
 aEC_cor <- scRoGG(dat=assay(aEC),filter = 0.2,ES_number = 200,org = 'mmu')
 capEC <- brain_3EC[,brain_3EC$annoated.cell.types=='capilEC']
@@ -347,9 +356,9 @@ EC_list <- list(aEC_cor1,capEC_cor1,vEC_cor1)
 ECs_cordiff <- robustness2(EC_list,p.adj = 0.1)
 
 # different patterns
-# sign difference 
+# sign difference
 pattern5 <- ECs_cordiff[ECs_cordiff$type=='sign', ]
-# DC change 
+# DC change
 ECs_cordiff_DC <- ECs_cordiff[ECs_cordiff$type=='DC',]
 # extra column: 3/2
 ECs_cordiff_DC3 <- ECs_cordiff_DC$diff2/ECs_cordiff_DC$diff1
@@ -363,9 +372,7 @@ pattern3 <- ECs_cordiff_DC[ECs_cordiff_DC$diff1<1&ECs_cordiff_DC3>1, ]
 #group1>group2>group3
 pattern4 <- ECs_cordiff_DC[ECs_cordiff_DC$diff1<1&ECs_cordiff_DC3<1, ]
 
-# Over-representation analysis with chi-square test 
-library(GO.db)
-library(org.Mm.eg.db)
+# Over-representation analysis with chi-square test
 keys = keys(org.Mm.eg.db)
 columns(org.Mm.eg.db)
 GO_info = AnnotationDbi::select(org.Mm.eg.db, keys=keys, columns = c("SYMBOL", "GO"))
@@ -391,25 +398,25 @@ genesetGOtest = function(set, universe, termsList, n_plot=10) {
   # set is the character vector of genes in geneset
   # universe is character vector of genes to include in universe
   # termsList is a list of the pathways
-  
+
   termsListfiltered = lapply(termsList, function(x) return(intersect(universe, x)))
   keepForTesting = unlist(lapply(termsListfiltered, length)) >= 5 & unlist(lapply(termsListfiltered, length)) <= 500
-  
+
   pval = sapply(1:length(termsList), function(i){
-    
+
     if (!keepForTesting[i]) return(1)
-    
+
     termGenes = termsListfiltered[[i]]
     return(fisher.test(table(universe %in% set, universe %in% termGenes), alt = "g")$p.value)
   })
   names(pval) <- names(termsListfiltered)
-  name <- sapply(termsListfiltered,function(y){ 
-    intersect(y,set) 
+  name <- sapply(termsListfiltered,function(y){
+    intersect(y,set)
   })
   df = data.frame(pathway = factor(names(pval), levels = c(names(pval), "")),  size = sapply(name, length),name = sapply(name, function(s)paste0(s,collapse = '/')),
                   pval = pval,
                   padj = p.adjust(pval, method = "BH"))
-  
+
   df_sorted = reshape::sort_df(df, "pval")[1:n_plot,]
   df_sorted$pathway = factor(df_sorted$pathway, levels =  rev(df_sorted$pathway))
   rownames(df_sorted) <- NULL
@@ -421,21 +428,20 @@ pattern2_pway <- genesetGOtest(union(pattern2$gene1,pattern2$gene2), rownames(br
 pattern3_pway <- genesetGOtest(union(pattern3$gene1,pattern3$gene2), rownames(brain_3EC), GO_list_for_patterns)
 pattern4_pway <- genesetGOtest(union(pattern4$gene1,pattern4$gene2), rownames(brain_3EC), GO_list_for_patterns)
 pattern5_pway <- genesetGOtest(union(pattern5$gene1,pattern5$gene2), rownames(brain_3EC), GO_list_for_patterns)
-library(ggplot2)
-library('scRoGG')
+
 plotPways(pattern1_pway,p.adj = 0.1)+ ggtitle('Pattern I')
 plotPways(pattern2_pway,p.adj = 0.1) # no significance
-pattern3.plot <- plotPways(pattern23_pway,p.adj = 0.1)+ ggtitle('Pattern III')  
-pattern4.plot <-plotPways(pattern4_pway,p.adj = 0.1)+ ggtitle('Pattern IV') 
-pattern5.plot <-plotPways(pattern5_pway,p.adj = 0.1)+ ggtitle('Pattern V') 
+pattern3.plot <- plotPways(pattern23_pway,p.adj = 0.1)+ ggtitle('Pattern III')
+pattern4.plot <-plotPways(pattern4_pway,p.adj = 0.1)+ ggtitle('Pattern IV')
+pattern5.plot <-plotPways(pattern5_pway,p.adj = 0.1)+ ggtitle('Pattern V')
 ggpubr::ggarrange(pattern3.plot,pattern4.plot,pattern5.plot, nrow = 1, ncol = 3, common.legend = T, legend = 'right')
 
 # visualise the overall coexpression network
 ECs_net <- scRoGG::coExp_network(ECs_cordiff[,c(1,2,4)],n_networks = 1,min_size = 3)
-library(igraph)
+
 graph = ECs_net[['all']]
 edgelist= as_long_data_frame(graph)
-library(RColorBrewer)
+
 brewer.pal(n = 5, name = "Dark2")
 type <- apply(edgelist,1,function(s){
   ss <- paste0(s[4],'_',s[5])
