@@ -18,7 +18,7 @@ Single-cell RNA-sequencing data is highly sparse and heterogenous, which largely
 The input gene count matrix can be either raw or normalised but not log data, which can be switched on by parameter **normalised**. As the assumption of the asymptotic test we implemented, we suggest having at least 30 scEssentials identified for each test. Consider increasing **ES_number** to obtain a sufficient number for the downstream analysis. 
 
 scRoGG has **four** main functions, which are:
-1. Identify robust coexpressed genes in a single condition. Here I use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3].
+1. Identify robust coexpressed genes in a single condition. Here we use **naive T cell** from healthy PMBC data that contains 711 cells and ~20k genes [3].
 
 ```
 library(scRoGG)
@@ -53,7 +53,7 @@ vEC_cor <- scRoGG(dat=assay(vEC),filter = 0.2,ES_number = 200,org = 'mmu')
 EC_list <- list(aEC_cor,capEC_cor,vEC_cor)
 ECs_cordiff <- robustness2(EC_list,p.adj = 0.1) #221 significantly DC genes identified
 ```
-3. Constructing coexpression network with community detection by Ledien clustering, returing *igraph* object for visualisation transformation. This method can be used for any types of edgelist object (3 columns: gene1; gene2; association). Here, I use the result from naiveT cells as an example. For more details, please refere to our vignette.
+3. Constructing coexpression network with community detection by Ledien clustering, returing *igraph* object for visualisation transformation. This method can be used for any types of edgelist object (3 columns: gene1; gene2; association). Here, we use the result from naiveT cells as an example. For more details, please refere to our vignette.
 
 ```
 library(scRoGG)
@@ -61,7 +61,7 @@ naiveT_net <- coExp_network(naiveT_sig_cor[,1:3],n_networks = 1) # To plot the l
 # naiveT_net is a list with 'all' for the full network and sub_1 as the largest sub-communities by size.
 ```
 
-4. Performing network-based GSEA (net-GSEA). In scRoGG, we implement a novel method to perform gene-set enrichment analysis for network object (ANY igraph objects). To obtain gene set information, scRoGG implements the syntax from msigd. Please refer to our manuscript for how the analysis is performed.
+4. Performing network-based GSEA (net-GSEA). In scRoGG, we implement a novel method to perform gene-set enrichment analysis for network object (ANY igraph objects). To obtain gene set information, scRoGG implements the syntax from msigdr. Please refer to our manuscript for how the analysis is performed.
 
 ```
 naiveT_gsea <- net_gsea(network = naiveT_net[['all']],species = 'Homo sapiens', category = 'C5',subcategory = 'GO:BP',minSize = 20,sign = F) # against GO BP pathways
