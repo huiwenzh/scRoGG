@@ -12,6 +12,7 @@ plotPways <- function(pways_df, n=10, p.adj = 0.1){
   pways_sub <- pways_sub[pways_sub$padj<p.adj,]
   #pways_sub$size <- as.numeric(pways_sub$size)
   pways_sub <- pways_sub[order(pways_sub$size, decreasing = F),]
+  pways_sub$pathway <- stringr::str_replace_all(pways_sub$pathway,'_',' ')
   ggplot2::ggplot(pways_sub,aes(reorder(pathway, size), y= size, fill=padj))+
     geom_col()+
     scale_x_discrete(labels = function(x)
