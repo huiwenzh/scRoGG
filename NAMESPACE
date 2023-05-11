@@ -2,6 +2,7 @@
 
 export(coExp_network)
 export(net_gsea)
+export(plotCoDis)
 export(plotCoExp)
 export(plotPways)
 export(robustness)
