@@ -6,25 +6,37 @@
 #' @return A ggplot object with violin plot
 #' @export
 #'
-plotCoDis <- function(dat_list,gene_name1, gene_name2){
+plotCoDis <- function(dat_list,gene_name1, gene_name2,group_name){
 if (length(dat_list)==1){
   dat <- dat_list[[1]]
   dat2 <- dat[dat$gene1==gene_name1&dat$gene2==gene_name2,-1:-3]
   null_dist <- colMeans(dat[,-1:-3], na.rm = T)
-  p_data <- data.frame(value=c(as.numeric(na.omit(dat2)),null_dist), group = rep(c("Sample",'Null'),c(length(na.omit(dat2)),length(null_dist))))
-  ggplot(p_data, aes(x=group, y=value, fill=group)) +
-    geom_violin(trim=FALSE)+
-    geom_boxplot(width=0.2, fill="white")+
-    labs(title=paste0("Correlation distribution (",gene_name1,' , ', gene_name2,")"),x="", y = "Correlation under scEssential")+ scale_fill_brewer(palette="Set1") + theme(legend.position = "none")+ theme_bw()+ theme(legend.position = "none")
+  p_data <- data.frame(value=c(as.numeric(na.omit(dat2)),null_dist), group = rep(c(group_name,'Null'),c(length(na.omit(dat2)),length(null_dist))))
+  # ggplot(p_data, aes(x=group, y=value, fill=group)) +
+  #   geom_violin(trim=FALSE)+
+  #   geom_boxplot(width=0.2, fill="white")+
+  #   labs(title=paste0("Correlation distribution (",gene_name1,' , ', gene_name2,")"),x="", y = "Correlation under scEssential")+ scale_fill_brewer(palette="Set1") + theme(legend.position = "none")+ theme_bw()
+  ggpubr::gghistogram(
+    p_data, x = "value", y = "..density..",
+    add = "mean", rug = TRUE,
+    fill = "group", palette = "Set1",
+    add_density = TRUE,xlab = paste0('Coexpression of ',gene_name1,", ",gene_name2)
+  )
 }
 else{
   dat <- sapply(dat_list,function(l)as.numeric(na.omit(l[l$gene1==gene_name1&l$gene2==gene_name2,-1:-3]))*l[l$gene1==gene_name1&l$gene2==gene_name2,3])
-  p_data <- data.frame(value=unlist(dat), group = rep(paste0('sample',1:length(dat_list)),unlist(sapply(dat_list,function(s)ncol(s)-3))))
+  p_data <- data.frame(value=unlist(dat), group = rep(group_name,unlist(sapply(dat_list,function(s)ncol(s)-3))))
 
-  ggplot(p_data, aes(x=group, y=value, fill=group)) +
-    geom_violin(trim=FALSE)+
-    geom_boxplot(width=0.2, fill="white")+
-    labs(title=paste0("Correlation distribution (",gene_name1,' , ', gene_name2,")"),x="", y = "Correlation under scEssential")+ scale_fill_brewer(palette="Set1") + theme(legend.position = "none")+ theme_bw()+ theme(legend.position = "none")
+  # ggplot(p_data, aes(x=group, y=value, fill=group)) +
+  #   geom_violin(trim=FALSE)+
+  #   geom_boxplot(width=0.2, fill="white")+
+  #   labs(title=paste0("Correlation distribution (",gene_name1,' , ', gene_name2,")"),x="", y = "Correlation under scEssential")+ scale_fill_brewer(palette="Set1") + theme(legend.position = "none")+ theme_bw()
+  ggpubr::gghistogram(
+    p_data, x = "value", y = "..density..",
+    add = "mean", rug = TRUE,
+    fill = "group", palette = "Set1",
+    add_density = TRUE,xlab = paste0('Coexpression of ',gene_name1,", ",gene_name2)
+  )
 }
 }
 

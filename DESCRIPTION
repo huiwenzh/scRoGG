@@ -19,7 +19,8 @@ Imports:
     ggpubr,
     ggExtra,
     igraph,
-    ggplot2
+    ggplot2,
+    ggpubr
 Depends: 
     R (>= 2.10),
     propr,
