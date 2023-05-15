@@ -4,7 +4,7 @@
 \alias{plotCoDis}
 \title{Visualisation of selected coexpressed gene pairs' correlation distribution}
 \usage{
-plotCoDis(dat_list, gene_name1, gene_name2)
+plotCoDis(dat_list, gene_name1, gene_name2, group_name = "sample")
 }
 \arguments{
 \item{gene_name1}{Gene1 to plot}

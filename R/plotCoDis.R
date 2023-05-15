@@ -6,7 +6,7 @@
 #' @return A ggplot object with violin plot
 #' @export
 #'
-plotCoDis <- function(dat_list,gene_name1, gene_name2,group_name){
+plotCoDis <- function(dat_list,gene_name1, gene_name2,group_name='sample'){
 if (length(dat_list)==1){
   dat <- dat_list[[1]]
   dat2 <- dat[dat$gene1==gene_name1&dat$gene2==gene_name2,-1:-3]
