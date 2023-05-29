@@ -13,6 +13,7 @@ test_mean <- rowMeans(as.matrix(local_cor[,-1:-3]),na.rm = T)
 test_sd <- matrixStats::rowSds(as.matrix(local_cor[,-1:-3]),na.rm = T)
 test_cv <- test_sd/test_mean
 cor_summary <- cbind(local_cor[,1:2],local_cor[,3]/test_cv*bi_zero)
+cor_summary <- cor_summary[!is.infinite(cor_summary[,3]),] # remove no SD gene
 if (stats==F){
   cor_summary <- cor_summary[abs(cor_summary[,3])>quantile(abs(cor_summary[,3]),0.01),]
   colnames(cor_summary) <- c('gene1','gene2','RS')
