@@ -65,6 +65,7 @@ robustness2 <- function(group_list,ref=1,p.adj = 0.05){
     dat_cv <- na.omit(dat_cv)
     cvequality::asymptotic_test(x=dat_cv$value,y=dat_cv$group)$p_value
   })
+
   cv_p[is.na(cv_p)]=1 # remove NAs due to low SD
   cv_p_adj <- p.adjust(cv_p, method = 'BH')
   cor_final2 <- cbind(prop_names[cv_p_adj<p.adj,1:2],rep('DC',sum(cv_p_adj<p.adj)), abs(RS_df1[cv_p_adj<p.adj,-ref]/RS_df1[cv_p_adj<p.adj,ref]))
