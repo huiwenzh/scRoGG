@@ -16,7 +16,7 @@ scRoGG1 <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org =
     sce <- scuttle::logNormCounts(sce[,colSums(SingleCellExperiment::counts(sce)) > 0], log=F)
     dat_keep <- SingleCellExperiment::normcounts(sce)
   }
-  dat_keep <- dat
+  if(normalised==F) dat_keep <- dat
   index <-  apply(dat_keep,1,function(y)sum(y>0))
   # at least present in more than 10%
   dat_keep <- dat_keep[index>(filter*ncol(dat_keep)),]
