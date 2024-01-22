@@ -16,6 +16,7 @@ scRoGG1 <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org =
     sce <- scuttle::logNormCounts(sce[,colSums(SingleCellExperiment::counts(sce)) > 0], log=F)
     dat_keep <- SingleCellExperiment::normcounts(sce)
   }
+  dat_keep <- dat
   index <-  apply(dat_keep,1,function(y)sum(y>0))
   # at least present in more than 10%
   dat_keep <- dat_keep[index>(filter*ncol(dat_keep)),]
@@ -59,7 +60,7 @@ scRoGG1 <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org =
   }
   x <- list()
   if (details==T){
-    use <- propr::ivar2index(ct, ivar = with_ES)
+    use <- match(with_ES, rownames(ct))
     logX <- log(ct)
     logSet <- logX[, use, drop = FALSE]
     ref <- rowMeans(logSet)
@@ -69,9 +70,9 @@ scRoGG1 <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org =
   # remove ribosomal genes
   cor_df_sig <- cor_df_sig[!is.infinite(cor_df_sig$value),]
   cor_phs <- lapply(with_ES, function(a){
-    use <- propr::ivar2index(ct, ivar = a)
+    #use <- propr::ivar2index(ct, ivar = a)
     logX <- log(ct)
-    logSet <- logX[, use, drop = FALSE]
+    logSet <- logX[, a, drop = FALSE]
     ref <- rowMeans(logSet)
     lr <- sweep(logX, 1, ref, "-")
     phs_cor <- apply(cor_df_sig,1,function(s){
