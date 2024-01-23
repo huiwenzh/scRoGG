@@ -6,7 +6,6 @@
 \usage{
 scRoGG1(
   dat,
-  normalised = TRUE,
   filter = 0.1,
   ES_number = 1000,
   org = "hsa",
@@ -16,8 +15,6 @@ scRoGG1(
 }
 \arguments{
 \item{dat}{A cell*gene matrix that can be raw or normliased without logarithm.}
-
-\item{normalised}{By default, performs normalisation via scattle package.     If changes to FALSE, the input data will be used in the following steps.}
 
 \item{filter}{By default, genes that expressed in less than 0.1 of total cells will be removed. You may want to increase the filtering threshold with more in-depth sequencing platforms.}
 
