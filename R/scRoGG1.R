@@ -1,7 +1,6 @@
 #'Generate proportional distribution based on essential genes for identifying robust gene-gene correlation in scRNA-seq data (with updated scEssentials)
 #' @author Huiwen Zheng
 #' @param dat A cell*gene matrix that can be raw or normliased without logarithm.
-#' @param normalised By default, performs normalisation via scattle package.     If changes to FALSE, the input data will be used in the following steps.
 #' @param filter By default, genes that expressed in less than 0.1 of total cells will be removed. You may want to increase the filtering threshold with more in-depth sequencing platforms.
 #' @param ES_number Number of the ES genes used in estimating proportional correlation distribution.
 #' @param org Selects certain ES genes under the organism. Currently only hsa and mmu are available.
@@ -10,19 +9,19 @@
 #' @return A list with three components:      1. bi_zero: joint zero for each gene pair.     2. prop_distribution: correlation distribution for each gene pair.    3.  transformed_data: transformed data using the mean of essential genes.
 #' @export
 #'
-scRoGG1 <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org = 'hsa', bino = 0.05,details = T){
-  if (normalised==T) {
-    sce <- SingleCellExperiment::SingleCellExperiment(list(counts=dat))
-    sce <- scuttle::logNormCounts(sce[,colSums(SingleCellExperiment::counts(sce)) > 0], log=F)
-    dat_keep <- SingleCellExperiment::normcounts(sce)
-  }
-  if(normalised==F) dat_keep <- dat
+scRoGG1 <- function(dat,filter = 0.1, ES_number = 1000, org = 'hsa', bino = 0.05,details = T){
+  sce <- SingleCellExperiment::SingleCellExperiment(list(counts=dat))
+  sce <- scuttle::logNormCounts(sce[,colSums(SingleCellExperiment::counts(sce)) > 0], log=F)
+  dat_keep <- SingleCellExperiment::normcounts(sce)
+
   index <-  apply(dat_keep,1,function(y)sum(y>0))
   # at least present in more than 10%
   dat_keep <- dat_keep[index>(filter*ncol(dat_keep)),]
+  dat <- dat[index>(filter*ncol(dat)),]
   # remove specific gene names - mito
   MT <- grep(pattern = "^MT-|^mt-", x = rownames(dat_keep), value = TRUE)
   dat_keep <- dat_keep[setdiff(rownames(dat_keep),MT),]
+  dat <- dat[setdiff(rownames(dat),MT),]
   message(paste('Removing', length(MT) , 'mitochondrial genes'))
   dat.coprob = dismay::binomial(t(dat_keep))
   # less than 0.05
@@ -31,12 +30,11 @@ scRoGG1 <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org =
   cor_df_sig <- cor_df[cor_df$value>(-log10(bino)),]
 
   dat_p <- dat_keep[rownames(dat_keep)%in%union(cor_df_sig$Var1,cor_df_sig$Var2),]
-
+  dat_p1 <- dat[rownames(dat)%in%union(cor_df_sig$Var1,cor_df_sig$Var2),]
   message(paste0(nrow(cor_df_sig),' gene pairs pass the bivariate distribution probability test'))
 
   # calculate proportionality against per essential genes
-  ct <- t(dat_p)
-
+  ct <- t(dat_p1)
   # get each essential genes
   if (org=='hsa'){
     ES <- scEssential_hsa
@@ -60,9 +58,8 @@ scRoGG1 <- function(dat,normalised = TRUE, filter = 0.1, ES_number = 1000, org =
   }
   x <- list()
   if (details==T){
-    use <- match(with_ES, rownames(ct))
     logX <- log(ct)
-    logSet <- logX[, use, drop = FALSE]
+    logSet <- logX[, with_ES, drop = FALSE]
     ref <- rowMeans(logSet)
     lr <- sweep(logX, 1, ref, "-")
     x[['transformed_data']] <- lr
