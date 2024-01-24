@@ -14,7 +14,7 @@ scRoGG1(
 )
 }
 \arguments{
-\item{dat}{A cell*gene matrix that can be raw or normliased without logarithm.}
+\item{dat}{A cell*gene matrix with raw count matrix.}
 
 \item{filter}{By default, genes that expressed in less than 0.1 of total cells will be removed. You may want to increase the filtering threshold with more in-depth sequencing platforms.}
 

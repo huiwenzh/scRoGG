@@ -1,6 +1,6 @@
 #'Generate proportional distribution based on essential genes for identifying robust gene-gene correlation in scRNA-seq data (with updated scEssentials)
 #' @author Huiwen Zheng
-#' @param dat A cell*gene matrix that can be raw or normliased without logarithm.
+#' @param dat A cell*gene matrix with raw count matrix.
 #' @param filter By default, genes that expressed in less than 0.1 of total cells will be removed. You may want to increase the filtering threshold with more in-depth sequencing platforms.
 #' @param ES_number Number of the ES genes used in estimating proportional correlation distribution.
 #' @param org Selects certain ES genes under the organism. Currently only hsa and mmu are available.
@@ -54,7 +54,7 @@ scRoGG1 <- function(dat,filter = 0.1, ES_number = 1000, org = 'hsa', bino = 0.05
   #replace zeros with next smallest value
   if(any(as.matrix(ct) == 0)){
     zeros <- ct == 0
-    ct[zeros] <- min(ct[!zeros])
+    ct[zeros] <- 0.1
   }
   x <- list()
   if (details==T){
