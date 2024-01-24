@@ -6,7 +6,8 @@ For installation please use the following codes in R
 ```
 devtools::install_github("huiwenzh/scRoGG")
 library(scRoGG)
-# requires the installastion of foreach, igraph, fgsea, msigdb, ggplot2 and propr
+# requires the installastion of igraph, fgsea, msigdb, ggplot2
+# The idea of using proportionality inspired from package *propr*, please refer to this paper for detailed mathematical questions
 ```
 We welcome any suggestions on the package! Please submit a ticket to issues if you have encountered any techinical problems. For more details for the method, please refer to our manuscript. 
 
